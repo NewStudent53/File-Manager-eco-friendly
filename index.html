@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+    <form onsubmit="login(); return false;">
+        <label for="loginEmail">Email:</label>
+        <input type="email" id="loginEmail" name="loginEmail">
+        <div id="errorMessage1" style="display:none;color:red;">Email es requerido</div>
+
+        <label for="loginPassword">Password:</label>
+        <input type="password" id="loginPassword" name="loginPassword">
+        <div id="errorMessage2" style="display:none;color:red;">Password es requerido</div>
+
+        <button type="submit">Login</button>
+    </form>
+
+    <script>
+        function login() {
+            var email = document.getElementById("loginEmail").value;
+            var password = document.getElementById("loginPassword").value;
+            var valid = true;
+
+            if (email === "") {
+                document.getElementById("errorMessage1").style.display = "block";
+                valid = false;
+            } else {
+                document.getElementById("errorMessage1").style.display = "none";
+            }
+
+            if (password === "") {
+                document.getElementById("errorMessage2").style.display = "block";
+                valid = false;
+            } else {
+                document.getElementById("errorMessage2").style.display = "none";
+            }
+
+            if (valid) {
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "verify_login.php", true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        alert(xhr.responseText);
+                        if (xhr.responseText.includes("Login exitoso")) {
+                            window.location.href = 'https://filemanager.eco/dashboard';
+                        }
+                    }
+                };
+                xhr.send("email=" + encodeURIComponent(email) + "&password=" + encodeURIComponent(password));
+            }
+        }
+    </script>
+</body>
+</html>
